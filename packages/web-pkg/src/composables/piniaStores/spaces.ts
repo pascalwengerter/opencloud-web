@@ -6,15 +6,10 @@ import {
   SpaceResource
 } from '@opencloud-eu/web-client'
 import { Graph } from '@opencloud-eu/web-client/graph'
-import {
-  buildSpace,
-  extractStorageId,
-  isPersonalSpaceResource,
-  isProjectSpaceResource
-} from '@opencloud-eu/web-client'
+import { isPersonalSpaceResource, isProjectSpaceResource } from '@opencloud-eu/web-client'
 import type { CollaboratorShare, MountPointSpaceResource } from '@opencloud-eu/web-client'
 import { useUserStore } from './user'
-import { ConfigStore, useConfigStore } from './config'
+import { useConfigStore } from './config'
 import { useSharesStore } from './shares'
 import { ListPermissionsSpaceRootSelectEnum } from '@opencloud-eu/web-client/graph/generated'
 
@@ -26,48 +21,19 @@ export const sortSpaceMembers = (shares: CollaboratorShare[]) => {
 export const getSpacesByType = async ({
   graphClient,
   driveType,
-  configStore,
   signal
 }: {
   graphClient: Graph
   driveType: string
-  configStore: ConfigStore
   signal?: AbortSignal
 }) => {
-  const mountpoints = await graphClient.drives.listMyDrives(
+  return graphClient.drives.listMyDrives(
     {
       orderBy: 'name asc',
       filter: `driveType eq ${driveType}`
     },
     { signal }
   )
-  if (!mountpoints.length) {
-    return []
-  }
-
-  if (driveType !== 'mountpoint' || !configStore.options.routing?.fullShareOwnerPaths) {
-    return mountpoints
-  }
-
-  const rootSpaceDriveAliasMapping: Record<string, string> = {}
-  mountpoints.forEach((space) => {
-    const { rootId, driveAlias } = space.root.remoteItem
-    rootSpaceDriveAliasMapping[rootId] = driveAlias
-  })
-
-  const rootSpaces = Object.entries(rootSpaceDriveAliasMapping).map(([id, driveAlias]) =>
-    // FIXME: create proper buildRootSpace (or whatever function)
-    buildSpace({
-      id: extractStorageId(id),
-      name: driveAlias, // FIXME: set a proper name
-      driveType: driveAlias.split('/')[0], // FIXME: can we retrieve this from api?
-      driveAlias,
-      path: '/',
-      serverUrl: configStore.serverUrl
-    })
-  )
-
-  return [...mountpoints, ...rootSpaces]
 }
 
 export const useSpacesStore = defineStore('spaces', () => {
@@ -204,13 +170,11 @@ export const useSpacesStore = defineStore('spaces', () => {
       const [personalSpaces, projectSpaces] = await Promise.all([
         getSpacesByType({
           graphClient,
-          driveType: 'personal',
-          configStore
+          driveType: 'personal'
         }),
         getSpacesByType({
           graphClient,
-          driveType: 'project',
-          configStore
+          driveType: 'project'
         })
       ])
 
@@ -235,7 +199,6 @@ export const useSpacesStore = defineStore('spaces', () => {
       const mountPointSpaces = await getSpacesByType({
         graphClient,
         driveType: 'mountpoint',
-        configStore,
         signal
       })
       addSpaces(mountPointSpaces)
@@ -254,7 +217,6 @@ export const useSpacesStore = defineStore('spaces', () => {
     const projectSpaces = await getSpacesByType({
       graphClient,
       driveType: 'project',
-      configStore,
       signal
     })
     spaces.value = unref(spaces).filter((s) => !isProjectSpaceResource(s))

@@ -94,7 +94,6 @@ const DavPropertyMapping = {
   HasPreview: defNumber('has-preview' as const),
 
   ShareId: defString('shareid' as const),
-  ShareRoot: defString('shareroot' as const),
   ShareTypes: { value: 'share-types', type: null as Record<string, number[]> },
   SharePermissions: defString('share-permissions' as const),
 
@@ -135,7 +134,6 @@ export abstract class DavProperties {
     DavProperty.OwnerId,
     DavProperty.OwnerDisplayName,
     DavProperty.RemoteItemId,
-    DavProperty.ShareRoot,
     DavProperty.ShareTypes,
     DavProperty.PrivateLink,
     DavProperty.ContentLength,

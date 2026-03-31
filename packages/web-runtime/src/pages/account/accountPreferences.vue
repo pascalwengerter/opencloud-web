@@ -157,7 +157,6 @@ import {
   useAuthStore,
   useCapabilityStore,
   useClientService,
-  useConfigStore,
   useMessages,
   useModals,
   useResourcesStore,
@@ -189,8 +188,6 @@ const authStore = useAuthStore()
 const { dispatchModal } = useModals()
 const spacesStore = useSpacesStore()
 const capabilityStore = useCapabilityStore()
-const configStore = useConfigStore()
-
 const isMobileWidth = ref<boolean>(window.innerWidth < MOBILE_BREAKPOINT)
 const disableEmailNotificationsValue = ref<boolean>()
 const viewOptionWebDavDetailsValue = ref<boolean>(resourcesStore.areWebDavDetailsShown)
@@ -221,7 +218,7 @@ const isLoading = computed(() => {
     !loadGraphUserTask.last
   )
 })
-const isSettingsServiceSupported = computed(() => !configStore.options.runningOnEos)
+const isSettingsServiceSupported = computed(() => true)
 const showNotifications = computed(
   () => authStore.userContextReady && unref(isSettingsServiceSupported)
 )

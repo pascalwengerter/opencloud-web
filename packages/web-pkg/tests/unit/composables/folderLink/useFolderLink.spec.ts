@@ -62,7 +62,6 @@ describe('useFolderLink', () => {
     it('should equal the "Shared with me" if resource is representing the root share', () => {
       const resource = {
         path: '/My share',
-        remoteItemPath: '/My share',
         remoteItemId: '1',
         isShareRoot: () => true
       } as Resource
@@ -74,7 +73,6 @@ describe('useFolderLink', () => {
     it('should equal the share name if resource is representing a file or folder in the root of a share', () => {
       const resource = {
         path: '/My share/test.txt',
-        remoteItemPath: '/My share',
         remoteItemId: '1',
         storageId: '1'
       } as Resource

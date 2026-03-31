@@ -57,7 +57,7 @@ import { ContextualHelperDataListItem, uniqueId } from '@opencloud-eu/design-sys
 import { OcDrop, OcInfoDrop } from '@opencloud-eu/design-system/components'
 import { Resource } from '@opencloud-eu/web-client'
 import { isProjectSpaceResource } from '@opencloud-eu/web-client'
-import { useConfigStore, useModals, DatePickerModal } from '@opencloud-eu/web-pkg'
+import { useModals, DatePickerModal } from '@opencloud-eu/web-pkg'
 import { useGettext } from 'vue3-gettext'
 import { RouteLocationNamedRaw } from 'vue-router'
 import ContextMenuItem from './ContextMenuItem.vue'
@@ -110,11 +110,10 @@ export default defineComponent({
       default: undefined
     }
   },
-  emits: ['expirationDateChanged', 'removeShare', 'notifyShare'],
+  emits: ['expirationDateChanged', 'removeShare'],
   setup(props, { emit }) {
     const language = useGettext()
     const { $gettext } = language
-    const configStore = useConfigStore()
     const { dispatchModal } = useModals()
     const expirationDateDrop = useTemplateRef<typeof OcDrop>('expirationDateDrop')
     const accessDetailsDrop = useTemplateRef<typeof OcInfoDrop>('accessDetailsDrop')
@@ -155,7 +154,6 @@ export default defineComponent({
     })
 
     return {
-      configStore,
       resource,
       expirationDateDrop,
       accessDetailsDrop,
@@ -193,15 +191,6 @@ export default defineComponent({
           class: 'remove-expiration-date',
           icon: 'calendar-close',
           method: this.removeExpirationDate
-        })
-      }
-
-      if (this.configStore.options.isRunningOnEos) {
-        result.push({
-          title: this.$gettext('Notify via mail'),
-          method: () => this.$emit('notifyShare'),
-          icon: 'mail',
-          class: 'notify-via-mail'
         })
       }
 

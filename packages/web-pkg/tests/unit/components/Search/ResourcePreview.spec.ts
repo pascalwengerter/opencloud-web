@@ -64,8 +64,7 @@ function getWrapper({
     data: {
       storageId: '1',
       name: 'lorem.txt',
-      path: '/',
-      remoteItemPath: ''
+      path: '/'
     }
   }),
   areFileExtensionsShown = true

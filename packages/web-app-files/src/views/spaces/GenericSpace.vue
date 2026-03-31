@@ -225,8 +225,6 @@ export default defineComponent({
     const { actions: createNewFolder } = useFileActionsCreateNewFolder({ space })
 
     const configStore = useConfigStore()
-    const { options: configOptions } = storeToRefs(configStore)
-
     const resourcesStore = useResourcesStore()
     const { removeResources, resetSelection } = resourcesStore
     const { currentFolder, totalResourcesCount, areHiddenFilesShown, ancestorMetaData } =
@@ -517,7 +515,6 @@ export default defineComponent({
     return {
       ...useFileActions(),
       ...resourcesViewDefaults,
-      configOptions,
       canUpload,
       breadcrumbs,
       folderNotFound,
@@ -553,15 +550,6 @@ export default defineComponent({
 
       if (isPublicSpaceResource(this.space) && !this.currentFolder?.fileId) {
         return true
-      }
-
-      if (this.configOptions.runningOnEos) {
-        if (
-          !this.currentFolder.fileId ||
-          this.currentFolder.path === this.paginatedResources[0].path
-        ) {
-          return true
-        }
       }
 
       return false

@@ -159,7 +159,6 @@ export function buildResource(
     privateLink: resource.props[DavProperty.PrivateLink],
     downloadURL: resource.props[DavProperty.DownloadURL],
     remoteItemId: resource.props[DavProperty.RemoteItemId],
-    remoteItemPath: resource.props[DavProperty.ShareRoot],
     owner: {
       id: resource.props[DavProperty.OwnerId],
       displayName: resource.props[DavProperty.OwnerDisplayName]
@@ -205,9 +204,7 @@ export function buildResource(
       return this.permissions.indexOf(DavPermission.Shared) >= 0
     },
     isShareRoot(): boolean {
-      return resource.props[DavProperty.ShareRoot]
-        ? resource.filename.split('/').length === 3
-        : false
+      return false
     },
     getDomSelector: () => extractDomSelector(id)
   } satisfies Resource

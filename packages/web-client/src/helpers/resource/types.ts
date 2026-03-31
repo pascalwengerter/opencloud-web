@@ -68,7 +68,6 @@ export interface Resource {
 
   // necessary for incoming share resources and resources inside shares
   remoteItemId?: string
-  remoteItemPath?: string
 
   hasPreview?(): boolean
   canCreate?(): boolean

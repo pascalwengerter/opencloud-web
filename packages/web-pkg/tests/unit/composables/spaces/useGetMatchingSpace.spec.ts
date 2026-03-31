@@ -33,7 +33,7 @@ describe('useSpaceHelpers', () => {
     it('should return the matching share space', () => {
       getWrapper({
         setup: ({ getMatchingSpace }) => {
-          const resource = mock<Resource>({ remoteItemPath: '/' })
+          const resource = mock<Resource>({})
           const shareSpace = { id: '1' } as ShareSpaceResource
           const { createShareSpace } = useSpacesStore()
           vi.mocked(createShareSpace).mockReturnValue(shareSpace)

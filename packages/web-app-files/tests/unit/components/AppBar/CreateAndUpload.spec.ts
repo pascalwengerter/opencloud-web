@@ -69,11 +69,7 @@ describe('CreateAndUpload component', () => {
     })
     it('call the "paste files"-action', async () => {
       const { wrapper, mocks } = getWrapper({
-        clipboardResources: [
-          mock<Resource>({
-            remoteItemPath: undefined
-          })
-        ]
+        clipboardResources: [mock<Resource>({})]
       })
       await wrapper.find(elSelector.pasteFilesBtn).trigger('click')
       expect(mocks.pasteActionHandler).toHaveBeenCalled()

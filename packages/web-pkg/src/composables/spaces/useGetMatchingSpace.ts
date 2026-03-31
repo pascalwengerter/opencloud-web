@@ -1,26 +1,20 @@
 import { useRouteParam } from '../router'
 import { isIncomingShareResource, Resource, SpaceResource } from '@opencloud-eu/web-client'
 import {
-  MountPointSpaceResource,
-  extractStorageId,
   isMountPointSpaceResource,
-  isProjectSpaceResource,
   ShareTypes,
   OCM_PROVIDER_ID,
   isShareResource
 } from '@opencloud-eu/web-client'
 import { computed, Ref, unref } from 'vue'
-import { basename } from 'path'
-import { useSpacesStore, useUserStore, useConfigStore } from '../piniaStores'
+import { useSpacesStore } from '../piniaStores'
 
 type GetMatchingSpaceOptions = {
   space?: Ref<SpaceResource>
 }
 
 export const useGetMatchingSpace = (options?: GetMatchingSpaceOptions) => {
-  const userStore = useUserStore()
   const spacesStore = useSpacesStore()
-  const configStore = useConfigStore()
   const spaces = computed(() => spacesStore.spaces)
   const driveAliasAndItem = useRouteParam('driveAliasAndItem')
 
@@ -51,9 +45,7 @@ export const useGetMatchingSpace = (options?: GetMatchingSpaceOptions) => {
         : 'share'
 
     let shareName: string
-    if (resource.remoteItemPath) {
-      shareName = basename(resource.remoteItemPath)
-    } else if (
+    if (
       unref(driveAliasAndItem)?.startsWith('share/') ||
       unref(driveAliasAndItem)?.startsWith('ocm-share/')
     ) {
@@ -72,11 +64,6 @@ export const useGetMatchingSpace = (options?: GetMatchingSpaceOptions) => {
     )
   }
 
-  const getMatchingMountPoints = (space: SpaceResource): MountPointSpaceResource[] =>
-    unref(spaces).filter(
-      (s) => isMountPointSpaceResource(s) && extractStorageId(s.root.remoteItem.rootId) === space.id
-    )
-
   const isPersonalSpaceRoot = (resource: Resource) => {
     return (
       resource?.storageId &&
@@ -86,18 +73,8 @@ export const useGetMatchingSpace = (options?: GetMatchingSpaceOptions) => {
     )
   }
 
-  const isResourceAccessible = ({ space, path }: { space: SpaceResource; path: string }) => {
-    if (!configStore.options.routing.fullShareOwnerPaths) {
-      return true
-    }
-
-    const projectSpace = unref(spaces).some((s) => isProjectSpaceResource(s) && s.id === space.id)
-    const fullyAccessibleSpace = space.isOwner(userStore.user) || projectSpace
-
-    return (
-      fullyAccessibleSpace ||
-      getMatchingMountPoints(space).some((m) => path.startsWith(m.root.remoteItem.path))
-    )
+  const isResourceAccessible = (_opts: { space: SpaceResource; path: string }) => {
+    return true
   }
 
   return {

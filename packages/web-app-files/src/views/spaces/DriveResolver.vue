@@ -15,7 +15,6 @@ import {
   queryItemAsString,
   useAuthStore,
   useClientService,
-  useConfigStore,
   useDriveResolver,
   useGetMatchingSpace,
   useRouteParam,
@@ -44,7 +43,7 @@ export default defineComponent({
   },
   setup() {
     const authStore = useAuthStore()
-    const configStore = useConfigStore()
+
     const clientService = useClientService()
     const router = useRouter()
     const driveAliasAndItem = useRouteParam('driveAliasAndItem')
@@ -125,8 +124,7 @@ export default defineComponent({
 
       const space = unref(resolvedDrive.space)
       if (space && isPublicSpaceResource(space)) {
-        const isRunningOnEos = configStore.options.runningOnEos
-        if (authStore.userContextReady && unref(fileId) && !isRunningOnEos) {
+        if (authStore.userContextReady && unref(fileId)) {
           try {
             const path = await clientService.webdav.getPathForFileId(unref(fileId), {
               headers: { Authorization: `Bearer ${authStore.accessToken}` }

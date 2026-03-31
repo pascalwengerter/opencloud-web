@@ -19,7 +19,7 @@ describe('AppTopBar', () => {
   describe('if no resource is present', () => {
     it('renders only a close button', () => {
       const { wrapper } = getWrapper({
-        props: { resource: mock<Resource>({ path: '/test.txt', remoteItemPath: '/test' }) }
+        props: { resource: mock<Resource>({ path: '/test.txt' }) }
       })
       expect(wrapper.find('#app-top-bar-close').exists()).toBeTruthy()
     })
@@ -27,7 +27,7 @@ describe('AppTopBar', () => {
   describe('if a resource is present', () => {
     it('renders a resource and no actions (if none given) and a close button', () => {
       const { wrapper } = getWrapper({
-        props: { resource: mock<Resource>({ path: '/test.txt', remoteItemPath: '/test' }) }
+        props: { resource: mock<Resource>({ path: '/test.txt' }) }
       })
       expect(wrapper.find('resource-list-item-stub').exists()).toBeTruthy()
     })
@@ -35,7 +35,7 @@ describe('AppTopBar', () => {
     it('renders a resource and mainActions (if given) and a close button', () => {
       const { wrapper } = getWrapper({
         props: {
-          resource: mock<Resource>({ path: '/test.txt', remoteItemPath: '/test' }),
+          resource: mock<Resource>({ path: '/test.txt' }),
           mainActions: [mock<Action>()]
         }
       })
@@ -45,7 +45,7 @@ describe('AppTopBar', () => {
     it('renders a resource and dropdownActions (if given) and a close button', () => {
       const { wrapper } = getWrapper({
         props: {
-          resource: mock<Resource>({ path: '/test.txt', remoteItemPath: '/test' }),
+          resource: mock<Resource>({ path: '/test.txt' }),
           dropDownMenuSections: [mock<Action>()]
         }
       })
@@ -55,7 +55,7 @@ describe('AppTopBar', () => {
     it('renders a resource without file extension if areFileExtensionsShown is set to false', () => {
       const { wrapper } = getWrapper({
         props: {
-          resource: mock<Resource>({ path: '/test.txt', remoteItemPath: '/test' }),
+          resource: mock<Resource>({ path: '/test.txt' }),
           mainActions: [mock<Action>()],
           dropDownMenuSections: [mock<Action>()]
         },
